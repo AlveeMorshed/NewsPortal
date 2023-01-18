@@ -8,26 +8,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.textview.MaterialTextView
 import com.moinul.newsportal.adapters.NewsAdapter
-import com.moinul.newsportal.databinding.FragmentSportsBinding
+import com.moinul.newsportal.databinding.FragmentAllNewsBinding
 import com.moinul.newsportal.model.Article
 import com.moinul.newsportal.viewModel.NewsViewModel
-import kotlinx.android.synthetic.main.fragment_sports.*
 
-
-class SportsFragment : Fragment() {
-    private lateinit var newsViewModel: NewsViewModel
+class TopNewsFragment : Fragment() {
+    private val viewModel: NewsViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
-    private var _binding: FragmentSportsBinding? = null
+    private var _binding: FragmentAllNewsBinding? = null
     private val binding get() = _binding!!
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,33 +32,23 @@ class SportsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentSportsBinding.inflate(inflater,container,false)
-        newsViewModel.getSportsNews()
+        _binding = FragmentAllNewsBinding.inflate(inflater,container,false)
         binding.lifecycleOwner = this
-        binding.sportsViewModel = newsViewModel
-
+        viewModel.getTopNews()
+        binding.allNewsViewModel = viewModel
 
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        newsViewModel = ViewModelProvider(this)[NewsViewModel::class.java]
-        val newsAdapter = NewsAdapter(requireContext(), newsViewModel)
-
-        sports_recyclerView.adapter = newsAdapter
-        sports_recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        newsViewModel.readAllData.observe(viewLifecycleOwner, Observer {
-            newsAdapter.setDataset(it)
-        })
         super.onViewCreated(view, savedInstanceState)
-        recyclerView = binding.sportsRecyclerView
+        recyclerView = binding.recyclerView
         recyclerView.setHasFixedSize(true)
 
         initialiseAdapter()
     }
+
     private fun initialiseAdapter() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 

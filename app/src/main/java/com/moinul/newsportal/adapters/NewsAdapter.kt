@@ -1,53 +1,68 @@
 package com.moinul.newsportal.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.google.android.material.textview.MaterialTextView
 import com.moinul.newsportal.R
 import com.moinul.newsportal.model.Article
-import com.moinul.newsportal.model.SportsNews
+import com.moinul.newsportal.model.Bookmark
+import com.moinul.newsportal.model.News
 import com.moinul.newsportal.viewModel.NewsViewModel
 
-class NewsAdapter: ListAdapter<Article, NewsAdapter.NewsViewHolder>(NewsItemDiffCallback())  {
-    class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+class NewsAdapter (val context: Context,
+                   val viewModel: NewsViewModel/*,
+                   private val newsList: ArrayList<Article>*/
+): RecyclerView.Adapter<NewsAdapter.NewsViewHolder>()  {
 
-        fun bindTo(article: Article){
-            // bind views with data
-        }
-    }
-
-    class NewsItemDiffCallback : DiffUtil.ItemCallback<Article>() {
-        override fun areItemsTheSame(oldNews: Article, newNews: Article): Boolean{
-            return oldNews.url == newNews.url
-        }
-
-        override fun areContentsTheSame(oldNews: Article, newNews: Article): Boolean{
-            return oldNews == newNews
-        }
+    private var newsList = emptyList<News>()
+    class NewsViewHolder(private val binding: View) :RecyclerView.ViewHolder(binding) {
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
-        return NewsViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.fragment_sports, parent, false)
-        )
-    }
-
-    override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-
+        val root = LayoutInflater.from(parent.context).inflate(R.layout.news_list, parent, false)
+        return NewsViewHolder(root)
     }
 
     override fun getItemCount(): Int {
-        val count = super.getItemCount()
-        return when (count) {
-            0 -> 1
-            else -> count
-        }
+        return this.newsList.size
     }
 
+    override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
+        val news = newsList[position]
+        val imageView = holder.itemView.findViewById<ImageView>(R.id.newsImage)
+        val titleView = holder.itemView.findViewById<MaterialTextView>(R.id.title)
+        val authorView = holder.itemView.findViewById<MaterialTextView>(R.id.author)
+        val publishDateView = holder.itemView.findViewById<MaterialTextView>(R.id.publishDate)
+        val description = holder.itemView.findViewById<MaterialTextView>(R.id.description)
+
+        Log.d("in onBindViewHolder()", "############ in OnBindViewHolder()")
+        Glide.with(context)
+            .load(news.urlToImage)
+            .centerCrop()
+            .error(R.drawable.ic_connection_error)
+            .into(imageView)
+
+
+        titleView.text = news.title.toString()
+        publishDateView.text = "📅 "+news.publishedAt.toString().substring(0, news.publishedAt.toString().indexOf("T"))
+        description.text = news.description.toString()
+        authorView.text = "🖋 "+news.author.toString()
+
+        imageView.setOnClickListener {
+            Toast.makeText(context, news.url, Toast.LENGTH_SHORT).show()
+        }
+
+        fun setDataset(news: List<News>){
+            this.newsList = news
+            notifyDataSetChanged()
+        }
+    }
 }

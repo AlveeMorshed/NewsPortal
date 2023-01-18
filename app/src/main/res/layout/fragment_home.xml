@@ -19,7 +19,14 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="#FFFFFF"
+            app:tabIndicatorColor="@color/teal_700"
+            app:tabIndicatorHeight="3.5dp"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@color/teal_700"
+            app:tabTextColor="#577B7E"
+            />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager2"

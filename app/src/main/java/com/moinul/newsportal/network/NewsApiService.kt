@@ -1,6 +1,6 @@
 package com.moinul.newsportal.network
 
-import com.moinul.newsportal.model.Article
+import com.moinul.newsportal.model.News
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -20,8 +20,28 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface NewsApiService {
-    @GET("top-headlines?category=sports&$API_KEY")
-    suspend fun getSportsNews():List<Article>
+    @GET("top-headlines?country=us&apiKey=$API_KEY")
+    suspend fun getTopNews():News
+    @GET("top-headlines?category=sports&apiKey=$API_KEY")
+    suspend fun getSportsNews():News
+
+    @GET("top-headlines?category=business&apiKey=$API_KEY")
+    suspend fun getBusinessNews():News
+
+    @GET("top-headlines?category=entertainment&apiKey=$API_KEY")
+    suspend fun getEntertainmentNews():News
+
+    @GET("top-headlines?category=general&apiKey=$API_KEY")
+    suspend fun getGeneralNews():News
+
+    @GET("top-headlines?category=health&apiKey=$API_KEY")
+    suspend fun getHealthNews():News
+
+    @GET("top-headlines?category=science&apiKey=$API_KEY")
+    suspend fun getScienceNews():News
+
+    @GET("top-headlines?category=technology&apiKey=$API_KEY")
+    suspend fun getTechnologyNews():News
 }
 
 object NewsApi{
