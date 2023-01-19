@@ -1,25 +1,13 @@
 package com.moinul.newsportal.fragments
 
-import android.os.Build.VERSION_CODES.N
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil.setContentView
-import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.moinul.newsportal.R
-import com.moinul.newsportal.adapters.NewsAdapter
 import com.moinul.newsportal.adapters.ViewPagerAdapter
-import com.moinul.newsportal.databinding.ActivityMainBinding
 import com.moinul.newsportal.databinding.FragmentHomeBinding
-import com.moinul.newsportal.model.Bookmark
-import com.moinul.newsportal.network.NewsApi
-import com.moinul.newsportal.viewModel.BookmarkViewModel
-import com.moinul.newsportal.viewModel.NewsViewModel
 
 
 class HomeFragment : Fragment() {
@@ -59,9 +47,14 @@ class HomeFragment : Fragment() {
                 tab,position ->
 
             when(position){
-
-                0 -> tab.text="TOP NEWS"
-                1 -> tab.text="SPORTS"
+                0 -> tab.text="TOP US NEWS"
+                1 -> tab.text="Business"
+                2 -> tab.text="Entertainment"
+                3 -> tab.text="General"
+                4 -> tab.text="Health"
+                5 -> tab.text="Science"
+                6 -> tab.text="Sports"
+                7 -> tab.text="Technology"
             }
         }.attach()
     }

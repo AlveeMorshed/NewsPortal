@@ -12,16 +12,16 @@ import com.bumptech.glide.Glide
 import com.google.android.material.textview.MaterialTextView
 import com.moinul.newsportal.R
 import com.moinul.newsportal.model.Article
+import com.moinul.newsportal.model.ArticleForRoomDB
 import com.moinul.newsportal.model.Bookmark
 import com.moinul.newsportal.model.News
 import com.moinul.newsportal.viewModel.NewsViewModel
 
 class NewsAdapter (val context: Context,
-                   val viewModel: NewsViewModel/*,
-                   private val newsList: ArrayList<Article>*/
-): RecyclerView.Adapter<NewsAdapter.NewsViewHolder>()  {
+                   val viewModel: NewsViewModel
+): RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
-    private var newsList = emptyList<News>()
+    private var newsList = emptyList<ArticleForRoomDB>()
     class NewsViewHolder(private val binding: View) :RecyclerView.ViewHolder(binding) {
 
     }
@@ -60,9 +60,11 @@ class NewsAdapter (val context: Context,
             Toast.makeText(context, news.url, Toast.LENGTH_SHORT).show()
         }
 
-        fun setDataset(news: List<News>){
-            this.newsList = news
-            notifyDataSetChanged()
-        }
+
+    }
+
+    fun setDataset(newsList: List<ArticleForRoomDB>){
+        this.newsList = newsList
+        notifyDataSetChanged()
     }
 }

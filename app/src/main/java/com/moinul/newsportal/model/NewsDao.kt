@@ -7,10 +7,12 @@ import androidx.room.Dao
 @Dao
 interface NewsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addArticle(article: Article)
+    suspend fun addArticle(article: ArticleForRoomDB)
 
     @Query("SELECT * FROM article_table")
-    fun readAllArticle(): LiveData<List<Article>>
+    fun readAllArticle(): LiveData<List<ArticleForRoomDB>>
+    @Query("SELECT * FROM article_table WHERE category= :category")
+    fun readArticleByCategory(category: String): LiveData<List<ArticleForRoomDB>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addBookmark(bookmark: Bookmark)

@@ -8,18 +8,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.moinul.newsportal.adapters.NewsAdapter
-import com.moinul.newsportal.databinding.FragmentAllNewsBinding
-import com.moinul.newsportal.model.Article
+import com.moinul.newsportal.databinding.FragmentTopNewsBinding
 import com.moinul.newsportal.viewModel.NewsViewModel
 
 class TopNewsFragment : Fragment() {
-    private val viewModel: NewsViewModel by viewModels()
+    private lateinit var  viewModel: NewsViewModel
     private lateinit var recyclerView: RecyclerView
-    private var _binding: FragmentAllNewsBinding? = null
+    private var _binding: FragmentTopNewsBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,10 +31,12 @@ class TopNewsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentAllNewsBinding.inflate(inflater,container,false)
+        _binding = FragmentTopNewsBinding.inflate(inflater,container,false)
         binding.lifecycleOwner = this
-        viewModel.getTopNews()
-        binding.allNewsViewModel = viewModel
+
+
+        viewModel = ViewModelProvider(requireActivity())[NewsViewModel::class.java]
+        //binding.allNewsViewModel = viewModel
 
 
         return binding.root
@@ -64,11 +65,10 @@ class TopNewsFragment : Fragment() {
     }
 
     private fun observeData() {
-        viewModel.articles.observe(viewLifecycleOwner){
-            recyclerView.adapter = NewsAdapter(
-                requireContext(), viewModel, it as ArrayList<Article>
-
-            )
+        val newsAdapter = NewsAdapter(requireContext(), viewModel)
+        recyclerView.adapter = newsAdapter
+        viewModel.getNewsFromDB("top-US").observe(viewLifecycleOwner){
+            newsAdapter.setDataset(it)
         }
     }
 

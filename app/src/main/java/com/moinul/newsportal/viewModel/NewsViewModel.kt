@@ -3,66 +3,140 @@ package com.moinul.newsportal.viewModel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
-import com.moinul.newsportal.model.Article
-import com.moinul.newsportal.model.Bookmark
-import com.moinul.newsportal.model.NewsDatabase
+import com.moinul.newsportal.model.*
 import com.moinul.newsportal.network.NewsApi
 import com.moinul.newsportal.repository.ArticleRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class NewsViewModel(application: Application): AndroidViewModel(application) {
+    val repository: ArticleRepository
+
     private val _articles = MutableLiveData<List<Article>>()
     val articles: LiveData<List<Article>> = _articles
+
+    private val _topNews = MutableLiveData<List<Article>>()
+    val topNews: LiveData<List<Article>> = _topNews
 
     private val _sportsNews = MutableLiveData<List<Article>>()
     val sportsNews: LiveData<List<Article>> = _sportsNews
 
 
 
-    val readAllData: LiveData<List<Article>>
-    val repository: ArticleRepository
+    val readAllData: LiveData<List<ArticleForRoomDB>>
+
 
     init {
         val newsDao = NewsDatabase.getDatabase(application).getDao()
+
         repository = ArticleRepository(newsDao)
+        //fetchAllNews()
         readAllData = repository.readAllArticle
-        getTopNews()
-        getSportsNews()
+
     }
 
-    fun addArticle(article: Article){
+    fun fetchAllNews(){
+        val categories = listOf<String>("sports","business","entertainment","general","health","science","technology")
+
+        viewModelScope.launch {
+            for(category in categories){
+                _articles.value = NewsApi.retrofitService.getAllNews(category).articles
+                Log.d("9999999999", "API fetch successful")
+                try{
+                    if(_articles.value!!.size > 0){
+                        viewModelScope.launch(Dispatchers.IO) {
+                            insertIntoDB(category, _articles)
+                        }
+                    }
+                }catch (e: Exception){
+                    Log.d("ALLLLLLL","$e     $articles")
+                    _articles.value = listOf()
+                }
+            }
+
+            _articles.value = NewsApi.retrofitService.getAllNews("").articles
+            Log.d("777777777", "API TOP US NEWS fetch successful")
+            try {
+                if (_articles.value!!.size > 0) {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        insertIntoDB("top-US", _articles)
+                    }
+                }
+            }catch (e: Exception){
+                Log.d("TOP US ALLLLLLL", "$e     $articles")
+                _articles.value = listOf()
+            }
+        }
+    }
+
+
+    fun addArticle(article: ArticleForRoomDB){
         viewModelScope.launch(Dispatchers.IO) {
             repository.addArticle(article)
         }
     }
 
-    fun getTopNews(){
-        viewModelScope.launch{
-            try {
-                _articles.value = NewsApi.retrofitService.getTopNews().articles
-                for (i in 0..articles.value!!.size){
-                    addArticle(articles.value!![i])
-                }
-            }catch (e:Exception){
-                Log.d("000000000000000","$e     $articles")
-                _articles.value = listOf()
-            }
+    fun insertIntoDB( category: String, newsList: MutableLiveData<List<Article>>){
+
+        for(news in newsList.value!!){
+            val article = ArticleForRoomDB(
+                news.author,
+                news.content,
+                news.description,
+                news.publishedAt,
+                news.title,
+                news.url!!,
+                news.urlToImage,
+                category
+            )
+            addArticle(article)
         }
     }
 
-    fun getSportsNews(){
+    private fun getAllNews(){
+
+    }
+
+    /*private fun getTopNews(){
         viewModelScope.launch{
             try {
-                _articles.value = NewsApi.retrofitService.getSportsNews().articles
-                for (i in 0..articles.value!!.size){
-                    addArticle(articles.value!![i])
+
+                _topNews.value = NewsApi.retrofitService.getTopNews().articles
+                Log.d("9999999999", "API fetch successful")
+
+                if(topNews.value!!.size > 0){
+                    viewModelScope.launch(Dispatchers.IO) {
+                        insertIntoDB("top", _topNews)
+                    }
                 }
+
             }catch (e:Exception){
-                Log.d("000000000000000","$e     $articles")
-                _articles.value = listOf()
+                Log.d("5555555555","$e     $articles")
+                _topNews.value = listOf()
             }
         }
-    }
+    }*/
+
+    /*private fun getSportsNews(){
+        viewModelScope.launch{
+            try {
+                _sportsNews.value = NewsApi.retrofitService.getSportsNews().articles
+
+                if(sportsNews.value!!.size > 0){
+                    viewModelScope.launch(Dispatchers.IO) {
+                        insertIntoDB("sports", _sportsNews)
+                    }
+                }
+
+            }catch (e:Exception){
+                Log.d("000000000000000","$e     $articles")
+                _topNews.value = listOf()
+            }
+        }
+    }*/
+
+//    fun getNews():LiveData<List<ArticleForRoomDB>> = repository.getAllNews()
+
+    fun getNewsFromDB(category: String): LiveData<List<ArticleForRoomDB>> = repository.getNewsByCategory(category)
 
 }
