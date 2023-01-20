@@ -16,13 +16,13 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): 
         return when(position){
 
             0 -> TopNewsFragment()
-//            1 -> BusinessFragment()
-//            2 -> EntertainmentFragment()
-//            3 -> GeneralFragment()
-//            4 -> HealthFragment()
-//            5 -> ScienceFragment()
+            1 -> BusinessFragment()
+            2 -> EntertainmentFragment()
+            3 -> GeneralFragment()
+            4 -> HealthFragment()
+            5 -> ScienceFragment()
             6 -> SportsFragment()
-//            7 -> TechnologyFragment()
+            7 -> TechnologyFragment()
             else -> Fragment()
 
         }

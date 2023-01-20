@@ -8,9 +8,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.commitNow
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.moinul.newsportal.MainActivity
 import com.moinul.newsportal.adapters.NewsAdapter
 import com.moinul.newsportal.databinding.FragmentTopNewsBinding
 import com.moinul.newsportal.viewModel.NewsViewModel
@@ -48,12 +50,16 @@ class TopNewsFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
 
         initialiseAdapter()
+//        recyclerView = binding.recyclerView
+//        recyclerView.setHasFixedSize(true)
+//
+//        initialiseAdapter()
     }
 
     private fun initialiseAdapter() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        if(verifyAvailableNetwork(requireContext())){
+        if(MainActivity.checkConnectivity(requireContext())){
             Log.d("OOOOOOOOOOOOOO","INTERNET AVAILABLE")
             recyclerView.visibility = View.VISIBLE
             observeData()

@@ -2,17 +2,9 @@ package com.moinul.newsportal.viewModel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
-import com.moinul.newsportal.model.Bookmark
-import com.moinul.newsportal.model.NewsDao
-import com.moinul.newsportal.model.NewsDatabase
-import com.moinul.newsportal.repository.BookmarkRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class BookmarkViewModel(application: Application): AndroidViewModel(application) {
-    val readAllData: LiveData<List<Bookmark>>
+    /*val readAllData: LiveData<List<Bookmark>>
     val repository: BookmarkRepository
 
     init {
@@ -31,6 +23,6 @@ class BookmarkViewModel(application: Application): AndroidViewModel(application)
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteBookmark(bookmark)
         }
-    }
+    }*/
 
 }

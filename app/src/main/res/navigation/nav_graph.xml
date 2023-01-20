@@ -10,11 +10,6 @@
         android:name="com.moinul.newsportal.fragments.HomeFragment"
         android:label="HomeFragment" />
     <fragment
-        android:id="@+id/bookmarksFragment"
-        android:name="com.moinul.newsportal.fragments.BookmarksFragment"
-        android:label="fragment_bookmarks"
-        tools:layout="@layout/fragment_bookmarks" />
-    <fragment
         android:id="@+id/sportsFragment"
         android:name="com.moinul.newsportal.fragments.SportsFragment"
         android:label="fragment_sports"
@@ -49,4 +44,9 @@
         android:name="com.moinul.newsportal.fragments.TechnologyFragment"
         android:label="fragment_technology"
         tools:layout="@layout/fragment_technology" />
+    <fragment
+        android:id="@+id/bookmarksFragment"
+        android:name="com.moinul.newsportal.fragments.BookmarksFragment"
+        android:label="fragment_bookmarks"
+        tools:layout="@layout/fragment_bookmarks" />
 </navigation>

@@ -14,6 +14,12 @@ interface NewsDao {
     @Query("SELECT * FROM article_table WHERE category= :category")
     fun readArticleByCategory(category: String): LiveData<List<ArticleForRoomDB>>
 
+    @Query("UPDATE article_table SET bookmarked='true' where id= :id")
+    suspend fun addBookmark(id: Int)
+
+    @Query("UPDATE article_table SET bookmarked='false' where id= :id")
+    suspend fun removeBookmark(id: Int)
+/*
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addBookmark(bookmark: Bookmark)
 
@@ -21,7 +27,7 @@ interface NewsDao {
     fun readAllBookmark(): LiveData<List<Bookmark>>
 
     @Delete
-    suspend fun deleteBookmark(bookmark: Bookmark)
+    suspend fun deleteBookmark(bookmark: Bookmark)*/
 
 
 

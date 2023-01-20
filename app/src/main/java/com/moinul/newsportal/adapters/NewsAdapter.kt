@@ -7,14 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.graphics.drawable.toDrawable
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.textview.MaterialTextView
 import com.moinul.newsportal.R
-import com.moinul.newsportal.model.Article
 import com.moinul.newsportal.model.ArticleForRoomDB
-import com.moinul.newsportal.model.Bookmark
-import com.moinul.newsportal.model.News
 import com.moinul.newsportal.viewModel.NewsViewModel
 
 class NewsAdapter (val context: Context,
@@ -37,11 +36,13 @@ class NewsAdapter (val context: Context,
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         val news = newsList[position]
+
         val imageView = holder.itemView.findViewById<ImageView>(R.id.newsImage)
         val titleView = holder.itemView.findViewById<MaterialTextView>(R.id.title)
         val authorView = holder.itemView.findViewById<MaterialTextView>(R.id.author)
         val publishDateView = holder.itemView.findViewById<MaterialTextView>(R.id.publishDate)
         val description = holder.itemView.findViewById<MaterialTextView>(R.id.description)
+        val addBookmarkButton = holder.itemView.findViewById<ImageView>(R.id.addBookmarkButton)
 
         Log.d("in onBindViewHolder()", "############ in OnBindViewHolder()")
         Glide.with(context)
@@ -56,12 +57,30 @@ class NewsAdapter (val context: Context,
         description.text = news.description.toString()
         authorView.text = "🖋 "+news.author.toString()
 
+        if(news.bookmarked==true){
+            addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_added_24)
+            addBookmarkButton.setOnClickListener {
+                addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_add_24)
+                viewModel.removeBookmark(news.id)
+            }
+        }else{
+            addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_add_24)
+            addBookmarkButton.setOnClickListener {
+                addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_added_24)
+                viewModel.addBookmark(news.id)
+            }
+        }
+
+
+
         imageView.setOnClickListener {
             Toast.makeText(context, news.url, Toast.LENGTH_SHORT).show()
         }
 
 
     }
+
+
 
     fun setDataset(newsList: List<ArticleForRoomDB>){
         this.newsList = newsList

@@ -3,6 +3,9 @@ package com.moinul.newsportal.viewModel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
+import com.google.android.material.snackbar.Snackbar
+import com.moinul.newsportal.MainActivity
+import com.moinul.newsportal.R
 import com.moinul.newsportal.model.*
 import com.moinul.newsportal.network.NewsApi
 import com.moinul.newsportal.repository.ArticleRepository
@@ -23,15 +26,15 @@ class NewsViewModel(application: Application): AndroidViewModel(application) {
 
 
 
-    val readAllData: LiveData<List<ArticleForRoomDB>>
+    var readAllData: LiveData<List<ArticleForRoomDB>>
 
 
     init {
         val newsDao = NewsDatabase.getDatabase(application).getDao()
-
-        repository = ArticleRepository(newsDao)
         //fetchAllNews()
+        repository = ArticleRepository(newsDao)
         readAllData = repository.readAllArticle
+//        Log.d("NewsViewModel", "${readAllData.value!!.size}")
 
     }
 
@@ -77,9 +80,12 @@ class NewsViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun insertIntoDB( category: String, newsList: MutableLiveData<List<Article>>){
-
+        if(category=="general"){
+            Log.d("GENERAL NEWS KOITA?","GEN size = ${newsList.value?.size}")
+        }
         for(news in newsList.value!!){
             val article = ArticleForRoomDB(
+                0,
                 news.author,
                 news.content,
                 news.description,
@@ -87,9 +93,21 @@ class NewsViewModel(application: Application): AndroidViewModel(application) {
                 news.title,
                 news.url!!,
                 news.urlToImage,
-                category
+                category,
+                false
             )
             addArticle(article)
+        }
+    }
+    fun addBookmark(id: Int){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.addBookmark(id)
+        }
+    }
+
+    fun removeBookmark(id: Int){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.removeBookmark(id)
         }
     }
 
