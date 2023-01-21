@@ -19,6 +19,9 @@ interface NewsDao {
 
     @Query("UPDATE article_table SET bookmarked='false' where id= :id")
     suspend fun removeBookmark(id: Int)
+
+    @Query("SELECT bookmarked FROM article_table WHERE id= :id")
+    fun isBookmarked(id: Int): LiveData<Boolean>
 /*
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addBookmark(bookmark: Bookmark)

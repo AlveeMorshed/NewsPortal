@@ -69,7 +69,7 @@ class SportsFragment : Fragment() {
     }
 
     private fun observeData() {
-        val newsAdapter = NewsAdapter(requireContext(), viewModel)
+        val newsAdapter = NewsAdapter(requireContext(), viewModel, viewLifecycleOwner)
         recyclerView.adapter = newsAdapter
         viewModel.getNewsFromDB("sports").observe(viewLifecycleOwner){
             newsAdapter.setDataset(it)

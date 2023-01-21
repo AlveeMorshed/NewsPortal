@@ -71,9 +71,14 @@ class TopNewsFragment : Fragment() {
     }
 
     private fun observeData() {
-        val newsAdapter = NewsAdapter(requireContext(), viewModel)
+        val newsAdapter = NewsAdapter(requireContext(), viewModel, viewLifecycleOwner)
         recyclerView.adapter = newsAdapter
-        viewModel.getNewsFromDB("top-US").observe(viewLifecycleOwner){
+        viewModel.getNewsFromDB("top-US").observe(viewLifecycleOwner){ val it1 = it
+            for(currentArticle in it1){
+                viewModel.isBookmarked(currentArticle.id).observe(viewLifecycleOwner){val it2 = it
+                    currentArticle.bookmarked = it2
+                }
+            }
             newsAdapter.setDataset(it)
         }
     }

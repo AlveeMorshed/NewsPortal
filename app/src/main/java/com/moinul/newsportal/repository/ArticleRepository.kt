@@ -29,4 +29,8 @@ class ArticleRepository(private val newsDao: NewsDao) {
         newsDao.removeBookmark(id)
     }
 
+    fun isBookmarked(id: Int): LiveData<Boolean>{
+        return newsDao.isBookmarked(id)
+    }
+
 }

@@ -111,6 +111,10 @@ class NewsViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
+    fun isBookmarked(id: Int): LiveData<Boolean>{
+        return repository.isBookmarked(id)
+    }
+
     private fun getAllNews(){
 
     }

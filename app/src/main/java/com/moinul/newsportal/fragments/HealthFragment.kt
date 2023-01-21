@@ -69,7 +69,7 @@ class HealthFragment : Fragment() {
     }
 
     private fun observeData() {
-        val newsAdapter = NewsAdapter(requireContext(), viewModel)
+        val newsAdapter = NewsAdapter(requireContext(), viewModel, viewLifecycleOwner)
         recyclerView.adapter = newsAdapter
         viewModel.getNewsFromDB("health").observe(viewLifecycleOwner){
             newsAdapter.setDataset(it)

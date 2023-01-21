@@ -7,7 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.constraintlayout.utils.widget.ImageFilterButton
+import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.core.graphics.drawable.toDrawable
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -17,7 +20,8 @@ import com.moinul.newsportal.model.ArticleForRoomDB
 import com.moinul.newsportal.viewModel.NewsViewModel
 
 class NewsAdapter (val context: Context,
-                   val viewModel: NewsViewModel
+                   val viewModel: NewsViewModel,
+                   private val lifecycleOwner: LifecycleOwner
 ): RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
     private var newsList = emptyList<ArticleForRoomDB>()
@@ -42,9 +46,12 @@ class NewsAdapter (val context: Context,
         val authorView = holder.itemView.findViewById<MaterialTextView>(R.id.author)
         val publishDateView = holder.itemView.findViewById<MaterialTextView>(R.id.publishDate)
         val description = holder.itemView.findViewById<MaterialTextView>(R.id.description)
-        val addBookmarkButton = holder.itemView.findViewById<ImageView>(R.id.addBookmarkButton)
+        val addBookmarkButton = holder.itemView.findViewById<ImageFilterView>(R.id.addBookmarkButton)
 
         Log.d("in onBindViewHolder()", "############ in OnBindViewHolder()")
+
+        //addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_add_24)
+
         Glide.with(context)
             .load(news.urlToImage)
             .centerCrop()
@@ -57,19 +64,32 @@ class NewsAdapter (val context: Context,
         description.text = news.description.toString()
         authorView.text = "🖋 "+news.author.toString()
 
-        if(news.bookmarked==true){
-            addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_added_24)
-            addBookmarkButton.setOnClickListener {
-                addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_add_24)
-                viewModel.removeBookmark(news.id)
-            }
+        Log.d("BOOKMARK KI?", "${getBookmarkStatus(news)}")
+        println(news.bookmarked)
+/*
+        if(news.id == 141){
+            Log.d("BOOKMARK KI?", "${getBookmarkStatus(news)}")
+            println(news.bookmarked)
+        }*/
+
+
+        /*if(getBookmarkStatus(news)==true){
+            addBookmarkButton.crossfade = 1.0F
         }else{
-            addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_add_24)
-            addBookmarkButton.setOnClickListener {
-                addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_added_24)
-                viewModel.addBookmark(news.id)
-            }
-        }
+            addBookmarkButton.crossfade = 0.0F
+        }*/
+
+       addBookmarkButton.setOnClickListener{
+           if(addBookmarkButton.crossfade==0.0F){
+               addBookmarkButton.crossfade = 1.0F
+               viewModel.addBookmark(news.id)
+                notifyDataSetChanged()
+           }else{
+               addBookmarkButton.crossfade = 0.0F
+               viewModel.removeBookmark(news.id)
+               notifyDataSetChanged()
+           }
+       }
 
 
 
@@ -85,5 +105,14 @@ class NewsAdapter (val context: Context,
     fun setDataset(newsList: List<ArticleForRoomDB>){
         this.newsList = newsList
         notifyDataSetChanged()
+    }
+
+    fun getBookmarkStatus(news : ArticleForRoomDB): Boolean{
+        var flag = false
+        viewModel.isBookmarked(news.id).observe(lifecycleOwner){
+            news.bookmarked = it
+            flag = it
+        }
+        return flag
     }
 }
