@@ -7,6 +7,8 @@ import com.moinul.newsportal.model.NewsDao
 
 class ArticleRepository(private val newsDao: NewsDao) {
     val readAllArticle: LiveData<List<ArticleForRoomDB>> = newsDao.readAllArticle()
+
+    val readAllTopNews: LiveData<List<ArticleForRoomDB>> = newsDao.readArticleByCategory("top-US")
     suspend fun addArticle(article: ArticleForRoomDB){
 
         newsDao.addArticle(article)
@@ -31,6 +33,10 @@ class ArticleRepository(private val newsDao: NewsDao) {
 
     fun isBookmarked(id: Int): LiveData<Boolean>{
         return newsDao.isBookmarked(id)
+    }
+
+    suspend fun deleteArticleByCategory(category: String){
+        return newsDao.deleteArticleByCategory(category)
     }
 
 }

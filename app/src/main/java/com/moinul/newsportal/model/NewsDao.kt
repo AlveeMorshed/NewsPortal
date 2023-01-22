@@ -32,6 +32,9 @@ interface NewsDao {
     @Delete
     suspend fun deleteBookmark(bookmark: Bookmark)*/
 
+    @Query("DELETE FROM article_table WHERE category= :category")
+    suspend fun deleteArticleByCategory(category: String)
+
 
 
 

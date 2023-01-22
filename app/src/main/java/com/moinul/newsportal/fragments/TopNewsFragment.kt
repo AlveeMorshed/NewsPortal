@@ -38,6 +38,11 @@ class TopNewsFragment : Fragment() {
 
 
         viewModel = ViewModelProvider(requireActivity())[NewsViewModel::class.java]
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.fetchTopNews()
+            viewModel.readAllTopNews
+        }
         //binding.allNewsViewModel = viewModel
 
 
@@ -73,7 +78,15 @@ class TopNewsFragment : Fragment() {
     private fun observeData() {
         val newsAdapter = NewsAdapter(requireContext(), viewModel, viewLifecycleOwner)
         recyclerView.adapter = newsAdapter
-        viewModel.getNewsFromDB("top-US").observe(viewLifecycleOwner){ val it1 = it
+        /*viewModel.getNewsFromDB("top-US").observe(viewLifecycleOwner){ val it1 = it
+            for(currentArticle in it1){
+                viewModel.isBookmarked(currentArticle.id).observe(viewLifecycleOwner){val it2 = it
+                    currentArticle.bookmarked = it2
+                }
+            }
+            newsAdapter.setDataset(it)
+        }*/
+        viewModel.readAllTopNews.observe(viewLifecycleOwner){ val it1 = it
             for(currentArticle in it1){
                 viewModel.isBookmarked(currentArticle.id).observe(viewLifecycleOwner){val it2 = it
                     currentArticle.bookmarked = it2
