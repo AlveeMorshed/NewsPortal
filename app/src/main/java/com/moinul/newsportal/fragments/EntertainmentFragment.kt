@@ -18,8 +18,7 @@ import com.moinul.newsportal.databinding.FragmentBusinessBinding
 import com.moinul.newsportal.databinding.FragmentEntertainmentBinding
 import com.moinul.newsportal.databinding.FragmentGeneralBinding
 import com.moinul.newsportal.viewModel.NewsViewModel
-
-
+import kotlinx.android.synthetic.main.fragment_top_news.*
 
 
 class EntertainmentFragment : Fragment() {
@@ -45,7 +44,11 @@ class EntertainmentFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity())[NewsViewModel::class.java]
 
-
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = true
+            viewModel.fetchNewsByCategory("entertainment")
+            swipeRefreshLayout.isRefreshing = false
+        }
 
         return binding.root
     }

@@ -95,6 +95,25 @@ class NewsViewModel(application: Application): AndroidViewModel(application) {
 
     }
 
+    fun fetchNewsByCategory(category: String){
+        if(MainActivity.checkConnectivity(this.getApplication<Application>().applicationContext)){
+            viewModelScope.launch {
+                _topNews.value = NewsApi.retrofitService.getAllNews(category).articles
+                try {
+                    if(topNews.value!!.size > 0){
+                        viewModelScope.launch(Dispatchers.IO) {
+                            deleteArticleByCategory(category)
+                            insertIntoDB(category, _topNews)
+                        }
+                    }
+                }catch (e: Exception){
+                    _topNews.value = listOf()
+                }
+            }
+        }
+
+    }
+
 
     fun addArticle(article: ArticleForRoomDB){
         viewModelScope.launch(Dispatchers.IO) {

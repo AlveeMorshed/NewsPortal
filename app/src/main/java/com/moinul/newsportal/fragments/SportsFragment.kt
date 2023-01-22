@@ -17,6 +17,8 @@ import com.moinul.newsportal.databinding.FragmentSportsBinding
 import com.moinul.newsportal.model.Article
 import com.moinul.newsportal.viewModel.NewsViewModel
 import kotlinx.android.synthetic.main.fragment_sports.*
+import kotlinx.android.synthetic.main.fragment_sports.swipeRefreshLayout
+import kotlinx.android.synthetic.main.fragment_top_news.*
 
 
 class SportsFragment : Fragment() {
@@ -42,7 +44,11 @@ class SportsFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity())[NewsViewModel::class.java]
 
-
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = true
+            viewModel.fetchNewsByCategory("sports")
+            swipeRefreshLayout.isRefreshing = false
+        }
 
         return binding.root
     }

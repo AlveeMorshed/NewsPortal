@@ -3,6 +3,7 @@ package com.moinul.newsportal.fragments
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -41,9 +42,13 @@ class TopNewsFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity())[NewsViewModel::class.java]
 
         binding.swipeRefreshLayout.setOnRefreshListener {
-            swipeRefreshLayout.isRefreshing = true
+            swipeRefreshLayout.isRefreshing= true
+            Handler().postDelayed({
+                // code to execute after the specified delay
+                swipeRefreshLayout.isRefreshing = false
+            }, 5000)
             viewModel.fetchTopNews()
-            swipeRefreshLayout.isRefreshing = false
+            //swipeRefreshLayout.isRefreshing = false
         }
         //binding.allNewsViewModel = viewModel
 

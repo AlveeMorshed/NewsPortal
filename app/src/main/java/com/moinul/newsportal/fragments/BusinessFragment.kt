@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.moinul.newsportal.adapters.NewsAdapter
 import com.moinul.newsportal.databinding.FragmentBusinessBinding
 import com.moinul.newsportal.viewModel.NewsViewModel
+import kotlinx.android.synthetic.main.fragment_top_news.*
 
 
 class BusinessFragment : Fragment() {
@@ -39,6 +40,11 @@ class BusinessFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity())[NewsViewModel::class.java]
 
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = true
+            viewModel.fetchNewsByCategory("business")
+            swipeRefreshLayout.isRefreshing = false
+        }
 
 
         return binding.root

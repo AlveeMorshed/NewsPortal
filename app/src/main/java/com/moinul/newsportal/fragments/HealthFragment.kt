@@ -17,6 +17,7 @@ import com.moinul.newsportal.adapters.NewsAdapter
 import com.moinul.newsportal.databinding.FragmentGeneralBinding
 import com.moinul.newsportal.databinding.FragmentHealthBinding
 import com.moinul.newsportal.viewModel.NewsViewModel
+import kotlinx.android.synthetic.main.fragment_top_news.*
 
 
 class HealthFragment : Fragment() {
@@ -42,7 +43,11 @@ class HealthFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity())[NewsViewModel::class.java]
 
-
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = true
+            viewModel.fetchNewsByCategory("health")
+            swipeRefreshLayout.isRefreshing = false
+        }
 
         return binding.root
     }
