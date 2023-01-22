@@ -100,7 +100,7 @@ class NewsAdapter (val context: Context,
             addBookmarkButton.crossfade = 0.0F
         }*/
 
-        viewModel.isBookmarked(news.id).observe(holder.itemView.context as LifecycleOwner, Observer {
+        /*viewModel.isBookmarked(news.id).observe(holder.itemView.context as LifecycleOwner, Observer {
             if(it){
                 addBookmarkButton.crossfade = 1.0F
                 if(news.id ==141 )
@@ -110,7 +110,7 @@ class NewsAdapter (val context: Context,
                 if(news.id ==141 )
                     Log.d("BOOKMARK KI?", "getBookmarkStatus:= ${it}")
             }
-        })
+        })*/
 
        addBookmarkButton.setOnClickListener{
            if(addBookmarkButton.crossfade==0.0F){

@@ -43,7 +43,7 @@ class NewsViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun fetchAllNews(){
-        val categories = listOf<String>("sports","business","entertainment","general","health","science","technology, top-US")
+        val categories = listOf<String>("sports","business","entertainment","general","health","science","technology"/*, "top-US"*/)
 
         viewModelScope.launch {
             for(category in categories){
@@ -61,7 +61,7 @@ class NewsViewModel(application: Application): AndroidViewModel(application) {
                 }
             }
 
-            /*_articles.value = NewsApi.retrofitService.getAllNews("").articles
+            _articles.value = NewsApi.retrofitService.getAllNews("").articles
             Log.d("777777777", "API TOP US NEWS fetch successful")
             try {
                 if (_articles.value!!.size > 0) {
@@ -72,14 +72,14 @@ class NewsViewModel(application: Application): AndroidViewModel(application) {
             }catch (e: Exception){
                 Log.d("TOP US ALLLLLLL", "$e     $articles")
                 _articles.value = listOf()
-            }*/
+            }
         }
     }
 
     fun fetchTopNews(){
         if(MainActivity.checkConnectivity(this.getApplication<Application>().applicationContext)){
             viewModelScope.launch {
-                _topNews.value = NewsApi.retrofitService.getAllNews("top-US").articles
+                _topNews.value = NewsApi.retrofitService.getAllNews("").articles
                 try {
                     if(topNews.value!!.size > 0){
                         viewModelScope.launch(Dispatchers.IO) {

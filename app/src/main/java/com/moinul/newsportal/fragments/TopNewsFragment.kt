@@ -16,6 +16,7 @@ import com.moinul.newsportal.MainActivity
 import com.moinul.newsportal.adapters.NewsAdapter
 import com.moinul.newsportal.databinding.FragmentTopNewsBinding
 import com.moinul.newsportal.viewModel.NewsViewModel
+import kotlinx.android.synthetic.main.fragment_top_news.*
 
 class TopNewsFragment : Fragment() {
     private lateinit var  viewModel: NewsViewModel
@@ -40,8 +41,9 @@ class TopNewsFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity())[NewsViewModel::class.java]
 
         binding.swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = true
             viewModel.fetchTopNews()
-            viewModel.readAllTopNews
+            swipeRefreshLayout.isRefreshing = false
         }
         //binding.allNewsViewModel = viewModel
 
@@ -79,19 +81,19 @@ class TopNewsFragment : Fragment() {
         val newsAdapter = NewsAdapter(requireContext(), viewModel, viewLifecycleOwner)
         recyclerView.adapter = newsAdapter
         /*viewModel.getNewsFromDB("top-US").observe(viewLifecycleOwner){ val it1 = it
-            for(currentArticle in it1){
+            *//*for(currentArticle in it1){
                 viewModel.isBookmarked(currentArticle.id).observe(viewLifecycleOwner){val it2 = it
                     currentArticle.bookmarked = it2
                 }
-            }
+            }*//*
             newsAdapter.setDataset(it)
         }*/
         viewModel.readAllTopNews.observe(viewLifecycleOwner){ val it1 = it
-            for(currentArticle in it1){
+            /*for(currentArticle in it1){
                 viewModel.isBookmarked(currentArticle.id).observe(viewLifecycleOwner){val it2 = it
                     currentArticle.bookmarked = it2
                 }
-            }
+            }*/
             newsAdapter.setDataset(it)
         }
     }
