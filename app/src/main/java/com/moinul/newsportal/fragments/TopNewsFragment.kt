@@ -42,12 +42,15 @@ class TopNewsFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity())[NewsViewModel::class.java]
 
         binding.swipeRefreshLayout.setOnRefreshListener {
+
+
             swipeRefreshLayout.isRefreshing= true
+            viewModel.fetchTopNews()
             Handler().postDelayed({
                 // code to execute after the specified delay
                 swipeRefreshLayout.isRefreshing = false
-            }, 5000)
-            viewModel.fetchTopNews()
+            }, 3000)
+
             //swipeRefreshLayout.isRefreshing = false
         }
         //binding.allNewsViewModel = viewModel

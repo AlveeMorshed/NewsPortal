@@ -110,6 +110,7 @@ class NewsViewModel(application: Application): AndroidViewModel(application) {
                     _topNews.value = listOf()
                 }
             }
+
         }
 
     }
