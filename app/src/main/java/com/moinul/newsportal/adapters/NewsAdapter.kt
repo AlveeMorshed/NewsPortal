@@ -1,5 +1,6 @@
 package com.moinul.newsportal.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.media.tv.TvContract.Programs.Genres.NEWS
 import android.os.Bundle
@@ -13,25 +14,28 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.utils.widget.ImageFilterButton
 import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.core.graphics.drawable.toDrawable
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
 import com.moinul.newsportal.R
-import com.moinul.newsportal.fragments.DetailedNewsFragment
-import com.moinul.newsportal.fragments.HomeFragmentDirections
+
+
 import com.moinul.newsportal.model.ArticleForRoomDB
 import com.moinul.newsportal.util.Constants
 import com.moinul.newsportal.viewModel.NewsViewModel
 import kotlinx.android.synthetic.main.fragment_detailed_news.view.*
 import kotlinx.android.synthetic.main.news_list.view.*
+import java.util.*
 
 class NewsAdapter (val context: Context,
                    val viewModel: NewsViewModel,
-                   private val lifecycleOwner: LifecycleOwner
+                   val currentFragment: Fragment
 ): RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
     private var newsList = emptyList<ArticleForRoomDB>()
@@ -57,7 +61,7 @@ class NewsAdapter (val context: Context,
         val authorView = holder.itemView.findViewById<MaterialTextView>(R.id.author)
         val publishDateView = holder.itemView.findViewById<MaterialTextView>(R.id.publishDate)
         val description = holder.itemView.findViewById<MaterialTextView>(R.id.description)
-        val addBookmarkButton = holder.itemView.findViewById<ImageFilterView>(R.id.addBookmarkButton)
+        val addBookmarkButton = holder.itemView.findViewById<ShapeableImageView>(R.id.addBookmarkButton)
 
         Log.d("in onBindViewHolder()", "############ in OnBindViewHolder()")
 
@@ -79,51 +83,30 @@ class NewsAdapter (val context: Context,
         holder.itemView.setOnClickListener {
             val bundle = Bundle()
             bundle.putParcelable(Constants.NEWS, news)
+            //currentFragment.setHasOptionsMenu(false)
             holder.itemView.findNavController().navigate(R.id.detailedNewsFragment, bundle)
+
         }
 
-        /*cardView.setOnClickListener {
-            val bundle: Bundle = Bundle()
-            bundle.putParcelable(Constants.NEWS, news)
-            holder.itemView.findNavController().navigate(R.id.detailedNewsFragment, bundle)
-        }*/
-/*
-        if(news.id == 141){
-            Log.d("BOOKMARK KI?", "${getBookmarkStatus(news)}")
-            println(news.bookmarked)
-        }*/
 
 
-        /*if(getBookmarkStatus(news)==true){
-            addBookmarkButton.crossfade = 1.0F
+        if(news.bookmarked == true){
+            addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_added_24)
         }else{
-            addBookmarkButton.crossfade = 0.0F
-        }*/
+            addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_add_24)
+        }
 
-        /*viewModel.isBookmarked(news.id).observe(holder.itemView.context as LifecycleOwner, Observer {
-            if(it){
-                addBookmarkButton.crossfade = 1.0F
-                if(news.id ==141 )
-                    Log.d("BOOKMARK KI?", "getBookmarkStatus:= ${it}")
-            }else{
-                addBookmarkButton.crossfade = 0.0F
-                if(news.id ==141 )
-                    Log.d("BOOKMARK KI?", "getBookmarkStatus:= ${it}")
-            }
-        })*/
 
        addBookmarkButton.setOnClickListener{
-           if(addBookmarkButton.crossfade==0.0F){
-               addBookmarkButton.crossfade = 1.0F
-               viewModel.addBookmark(news.id)
-               notifyDataSetChanged()
-
+           if(!news.bookmarked){
+               news.bookmarked=true
+               viewModel.updateBookmark(news)
+               addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_added_24)
                println(news.bookmarked)
            }else{
-               addBookmarkButton.crossfade = 0.0F
-               viewModel.removeBookmark(news.id)
-               notifyDataSetChanged()
-
+               news.bookmarked=false
+               viewModel.updateBookmark(news)
+               addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_add_24)
                println(news.bookmarked)
            }
        }
@@ -137,23 +120,26 @@ class NewsAdapter (val context: Context,
 
     }
 
-
-
     fun setDataset(newsList: List<ArticleForRoomDB>){
         this.newsList = newsList
         notifyDataSetChanged()
     }
 
-    /*fun getBookmarkStatus(news : ArticleForRoomDB): Boolean{
-        var flag = true
-        viewModel.isBookmarked(news.id).observe(lifecycleOwner){
-            news.bookmarked = it
-            flag = it
-
+    fun performSearch(text: String){
+        val searchResults =  ArrayList<ArticleForRoomDB>()
+        for(article in newsList){
+            Log.d("List e ki?", "${newsList}")
+            if(article.title?.lowercase(Locale.ROOT)?.contains(text.lowercase(Locale.ROOT)) == true)
+            {
+                searchResults.add(article)
+            }
         }
-        Log.d("BOOKMARK KI?", "${news.bookmarked}")
-        println(news.bookmarked)
-        Log.d("BOOKMARK KI?", "getBookmarkStatus: ${flag}")
-        return flag
-    }*/
+        showResults(searchResults)
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    fun showResults(searchResults: List<ArticleForRoomDB>){
+        newsList = searchResults
+        notifyDataSetChanged()
+    }
+
 }

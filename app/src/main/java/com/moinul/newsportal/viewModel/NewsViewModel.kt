@@ -148,17 +148,13 @@ class NewsViewModel(application: Application): AndroidViewModel(application) {
             addArticle(article)
         }
     }
-    fun addBookmark(id: Int){
+    fun updateBookmark(article: ArticleForRoomDB){
         viewModelScope.launch(Dispatchers.IO){
-            repository.addBookmark(id)
+            repository.updateBookmark(article)
         }
     }
 
-    fun removeBookmark(id: Int){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.removeBookmark(id)
-        }
-    }
+
 
     fun isBookmarked(id: Int): LiveData<Boolean>{
         return repository.isBookmarked(id)

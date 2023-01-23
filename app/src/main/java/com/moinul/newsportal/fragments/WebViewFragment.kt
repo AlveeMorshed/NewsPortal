@@ -2,10 +2,8 @@ package com.moinul.newsportal.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.webkit.WebViewClient
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -22,12 +20,10 @@ class WebViewFragment : Fragment() {
     var currentUrl : String? = null
 
 
+
     private val args: WebViewFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -9,16 +9,19 @@ interface NewsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addArticle(article: ArticleForRoomDB)
 
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    suspend fun addBookmark(bookmark: Bookmark)
+
     @Query("SELECT * FROM article_table")
     fun readAllArticle(): LiveData<List<ArticleForRoomDB>>
     @Query("SELECT * FROM article_table WHERE category= :category")
     fun readArticleByCategory(category: String): LiveData<List<ArticleForRoomDB>>
 
-    @Query("UPDATE article_table SET bookmarked='true' where id= :id")
-    suspend fun addBookmark(id: Int)
+    @Update
+    suspend fun updateBookmark(article: ArticleForRoomDB)
 
-    @Query("UPDATE article_table SET bookmarked='false' where id= :id")
-    suspend fun removeBookmark(id: Int)
+    @Update
+    suspend fun removeBookmark(article: ArticleForRoomDB)
 
     @Query("SELECT bookmarked FROM article_table WHERE id= :id")
     fun isBookmarked(id: Int): LiveData<Boolean>

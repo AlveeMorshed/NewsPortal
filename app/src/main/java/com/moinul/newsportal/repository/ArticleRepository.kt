@@ -3,6 +3,7 @@ package com.moinul.newsportal.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.moinul.newsportal.model.ArticleForRoomDB
+
 import com.moinul.newsportal.model.NewsDao
 
 class ArticleRepository(private val newsDao: NewsDao) {
@@ -23,13 +24,10 @@ class ArticleRepository(private val newsDao: NewsDao) {
         return newsDao.readAllArticle()
     }
 
-    suspend fun addBookmark(id: Int){
-        newsDao.addBookmark(id)
+    suspend fun updateBookmark(article: ArticleForRoomDB){
+        newsDao.updateBookmark(article)
     }
 
-    suspend fun removeBookmark(id: Int){
-        newsDao.removeBookmark(id)
-    }
 
     fun isBookmarked(id: Int): LiveData<Boolean>{
         return newsDao.isBookmarked(id)
@@ -38,5 +36,10 @@ class ArticleRepository(private val newsDao: NewsDao) {
     suspend fun deleteArticleByCategory(category: String){
         return newsDao.deleteArticleByCategory(category)
     }
+
+
+//    suspend fun addBookmark(bookmark: Bookmark){
+//        return newsDao.
+//    }
 
 }

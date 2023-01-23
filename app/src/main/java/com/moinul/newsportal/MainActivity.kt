@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         val bottomNavBar = binding.bottomNavbar
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment
         navController = navHostFragment.findNavController()
+        //setupActionBarWithNavController(navController)
 
         bottomNavBar.setOnItemSelectedListener{
             when(it.itemId){

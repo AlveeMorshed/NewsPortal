@@ -4,14 +4,13 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.moinul.newsportal.R
 import com.moinul.newsportal.adapters.NewsAdapter
 import com.moinul.newsportal.databinding.FragmentSportsBinding
 import com.moinul.newsportal.model.Article
@@ -28,10 +27,25 @@ class SportsFragment : Fragment() {
     private val binding get() = _binding!!
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setHasOptionsMenu(true)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.menu_search, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.action_search ->{
+
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,7 +89,7 @@ class SportsFragment : Fragment() {
     }
 
     private fun observeData() {
-        val newsAdapter = NewsAdapter(requireContext(), viewModel, viewLifecycleOwner)
+        val newsAdapter = NewsAdapter(requireContext(), viewModel, this)
         recyclerView.adapter = newsAdapter
         viewModel.getNewsFromDB("sports").observe(viewLifecycleOwner){
             newsAdapter.setDataset(it)

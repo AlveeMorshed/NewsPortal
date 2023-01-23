@@ -19,7 +19,7 @@
             android:name="androidx.navigation.fragment.NavHostFragment"
 
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             app:defaultNavHost="true"
             app:layout_constraintBottom_toTopOf="@id/bottom_navbar"
             app:layout_constraintEnd_toEndOf="parent"
@@ -31,11 +31,16 @@
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-
+            android:background="@drawable/oval_bottom_nav"
+            android:elevation="10dp"
+            app:itemIconSize="27dp"
+            android:layout_margin="7dp"
+            app:itemIconTint="@color/state_colors"
+            app:labelVisibilityMode="unlabeled"
             app:menu="@menu/bottom_nav_bar" />
 
 

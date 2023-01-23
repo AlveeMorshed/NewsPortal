@@ -21,10 +21,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:background="#FFFFFF"
-            app:tabIndicatorColor="@color/teal_700"
+            app:tabIndicatorColor="@color/darkViolet"
             app:tabIndicatorHeight="3.5dp"
             app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/teal_700"
+            app:tabSelectedTextColor="@color/darkViolet"
             app:tabTextColor="#577B7E"
             />
 

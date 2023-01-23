@@ -4,9 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,10 +24,25 @@ class TechnologyFragment : Fragment() {
     private val binding get() = _binding!!
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+   /* override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setHasOptionsMenu(true)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.menu_search, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.action_search ->{
+
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,7 +87,7 @@ class TechnologyFragment : Fragment() {
     }
 
     private fun observeData() {
-        val newsAdapter = NewsAdapter(requireContext(), viewModel, viewLifecycleOwner)
+        val newsAdapter = NewsAdapter(requireContext(), viewModel, this)
         recyclerView.adapter = newsAdapter
         viewModel.getNewsFromDB("technology").observe(viewLifecycleOwner){
             newsAdapter.setDataset(it)
