@@ -27,6 +27,7 @@ import com.moinul.newsportal.R
 
 
 import com.moinul.newsportal.model.ArticleForRoomDB
+import com.moinul.newsportal.model.Bookmark
 import com.moinul.newsportal.util.Constants
 import com.moinul.newsportal.viewModel.NewsViewModel
 import kotlinx.android.synthetic.main.fragment_detailed_news.view.*
@@ -35,10 +36,10 @@ import java.util.*
 
 class NewsAdapter (val context: Context,
                    val viewModel: NewsViewModel,
-                   val currentFragment: Fragment
+                   val listFromFragment:List<ArticleForRoomDB>
 ): RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
-    private var newsList = emptyList<ArticleForRoomDB>()
+    private var newsList = listFromFragment
     class NewsViewHolder(private val binding: View) :RecyclerView.ViewHolder(binding) {
 
     }
@@ -54,8 +55,7 @@ class NewsAdapter (val context: Context,
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         val news = newsList[position]
-        val cardView = holder.itemView.cardView
-
+        val errorText = "Not Available"
         val imageView = holder.itemView.findViewById<ImageView>(R.id.newsImage)
         val titleView = holder.itemView.findViewById<MaterialTextView>(R.id.title)
         val authorView = holder.itemView.findViewById<MaterialTextView>(R.id.author)
@@ -74,11 +74,26 @@ class NewsAdapter (val context: Context,
             .into(imageView)
 
 
-        titleView.text = news.title.toString()
-        publishDateView.text = "📅 "+news.publishedAt.toString().substring(0, news.publishedAt.toString().indexOf("T"))
-        description.text = news.description.toString()
-        authorView.text = "🖋 "+news.author.toString()
 
+        titleView.text = news.title.toString()
+        if(news.title==null || news.title == ""){
+            titleView.text = errorText
+        }
+
+        publishDateView.text = "📅 "+news.publishedAt.toString().substring(0, news.publishedAt.toString().indexOf("T"))
+        if(publishDateView.text== null || publishDateView.text == ""){
+            publishDateView.text = errorText
+        }
+
+
+        description.text = news.description.toString()
+        if(description.text==null || description.text==""){
+            description.text = errorText
+        }
+        authorView.text = "🖋 "+news.author.toString()
+        if(authorView.text==null || authorView.text==""){
+            authorView.text = errorText
+        }
 
         holder.itemView.setOnClickListener {
             val bundle = Bundle()
@@ -90,7 +105,7 @@ class NewsAdapter (val context: Context,
 
 
 
-        if(news.bookmarked == true){
+        if(news.bookmarked){
             addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_added_24)
         }else{
             addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_add_24)
@@ -101,11 +116,13 @@ class NewsAdapter (val context: Context,
            if(!news.bookmarked){
                news.bookmarked=true
                viewModel.updateBookmark(news)
+               viewModel.addBookmark(Bookmark(news.id, news.author, news.content, news.description, news.publishedAt, news.title, news.url, news.urlToImage, news.category))
                addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_added_24)
                println(news.bookmarked)
            }else{
                news.bookmarked=false
                viewModel.updateBookmark(news)
+               viewModel.deleteBookmark(news.id)
                addBookmarkButton.setImageResource(R.drawable.baseline_bookmark_add_24)
                println(news.bookmarked)
            }
@@ -127,8 +144,8 @@ class NewsAdapter (val context: Context,
 
     fun performSearch(text: String){
         val searchResults =  ArrayList<ArticleForRoomDB>()
-        for(article in newsList){
-            Log.d("List e ki?", "${newsList}")
+        for(article in listFromFragment){
+            Log.d("List e ki?", "$newsList")
             if(article.title?.lowercase(Locale.ROOT)?.contains(text.lowercase(Locale.ROOT)) == true)
             {
                 searchResults.add(article)

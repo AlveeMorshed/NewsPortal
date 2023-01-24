@@ -63,6 +63,9 @@ class DetailedNewsFragment : Fragment() {
             .into(binding.newsImage)
 
         binding.title.text = currentNews?.title.toString()
+        if(currentNews?.title.toString()=="null" || currentNews?.title==null || currentNews?.title.toString()==""){
+
+        }
         binding.author.text = currentNews?.author.toString()
         binding.description.text = currentNews?.description.toString()
         binding.content.text = currentNews?.content.toString()

@@ -11,7 +11,6 @@ import com.moinul.newsportal.fragments.*
 
 
 class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): FragmentStateAdapter(fragmentManager, lifecycle) {
-    var currentFragment: Fragment? = null
     override fun getItemCount(): Int {
         return 8
     }
@@ -19,42 +18,23 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): 
     override fun createFragment(position: Int): Fragment {
         return when(position){
 
-            0 -> {
-                currentFragment = TopNewsFragment()
-                return currentFragment as TopNewsFragment
-            }
-            1 -> {
-                currentFragment = BusinessFragment()
-                return currentFragment as BusinessFragment
-            }
-            2 -> {
-                currentFragment = EntertainmentFragment()
-                return currentFragment as EntertainmentFragment
-            }
-            3 -> {
-                currentFragment = GeneralFragment()
-                return currentFragment as GeneralFragment
-            }
-            4 -> {
-                currentFragment = HealthFragment()
-                return currentFragment as HealthFragment
-            }
-            5 -> {
-                currentFragment = ScienceFragment()
-                return currentFragment as ScienceFragment
-            }
-            6 -> {
-                currentFragment = SportsFragment()
-                return currentFragment as SportsFragment
-            }
-            7 -> {
-                currentFragment = TechnologyFragment()
-                return currentFragment as TechnologyFragment
-            }
-            else -> {
-                currentFragment = Fragment()
-                return currentFragment as Fragment
-            }
+            0 -> TopNewsFragment()
+
+            1 -> BusinessFragment()
+
+            2 -> EntertainmentFragment()
+
+            3 -> GeneralFragment()
+
+            4 -> HealthFragment()
+
+            5 -> ScienceFragment()
+
+            6 -> SportsFragment()
+
+            7 -> TechnologyFragment()
+
+            else -> Fragment()
 
         }
     }

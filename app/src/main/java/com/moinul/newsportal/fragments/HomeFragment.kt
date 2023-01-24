@@ -16,9 +16,15 @@ import com.moinul.newsportal.adapters.NewsAdapter
 import com.moinul.newsportal.adapters.ViewPagerAdapter
 import com.moinul.newsportal.databinding.FragmentHomeBinding
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_business.view.*
+import kotlinx.android.synthetic.main.fragment_entertainment.view.*
+import kotlinx.android.synthetic.main.fragment_general.view.*
 import kotlinx.android.synthetic.main.fragment_health.*
-import kotlinx.android.synthetic.main.fragment_health.recyclerView
+import kotlinx.android.synthetic.main.fragment_health.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_science.view.*
+import kotlinx.android.synthetic.main.fragment_sports.view.*
+import kotlinx.android.synthetic.main.fragment_technology.view.*
 import kotlinx.android.synthetic.main.fragment_top_news.*
 import kotlinx.android.synthetic.main.fragment_top_news.view.*
 
@@ -54,33 +60,36 @@ class HomeFragment : Fragment() {
             when(position){
                 0 -> {
                         tab.text="TOP US NEWS"
-                        currentCategory = "top-US"
+                        tab.setIcon(R.drawable.icon_top_news)
                     }
-                1 -> {tab.text="Business"
-                    currentCategory ="business"
+                1 -> {
+                    tab.text="Business"
+                    tab.setIcon(R.drawable.icon_business_news)
                 }
                 2 -> {
                     tab.text="Entertainment"
-                    currentCategory = "entertainment"
+                    tab.setIcon(R.drawable.icon_entertainment)
+
                 }
                 3 -> {
                     tab.text="General"
-                    currentCategory = "entertainment"
+                    tab.setIcon(R.drawable.icon_general)
                 }
                 4 -> {
                     tab.text="Health"
-                    currentCategory = "health"
+                    tab.setIcon(R.drawable.icon_health)
                 }
                 5 -> {
                     tab.text="Science"
-                    currentCategory = "science"
+                    tab.setIcon(R.drawable.icon_science)
                 }
-                6 -> {tab.text="Sports"
-                    currentCategory = "sports"
+                6 -> {
+                    tab.text="Sports"
+                    tab.setIcon(R.drawable.icon_sports)
                 }
                 7 -> {
-                    tab.text="Technology"
-                    currentCategory = "technology"
+                    tab.text = "Technology"
+                    tab.setIcon(R.drawable.icon_technology)
                 }
             }
         }.attach()
@@ -97,28 +106,85 @@ class HomeFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.menu_search, menu)
-        val menuItem = menu?.findItem(R.id.action_search)
+        val menuItem = menu.findItem(R.id.action_search)
         val searchView = menuItem?.actionView as SearchView
 
 
 
         searchView.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
+
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                Log.d(TAG, "query: $newText")
-                //Log.d(TAG,"${viewPager2.currentItem.toString()}")
-                Log.d("category ki", "$currentCategory")
+
+
                 if (newText != null) {
-                    //val adapter = recyclerView.adapter as NewsAdapter
-                    Log.d("category ki", "$currentCategory")
+
                     if(viewPager2!=null && viewPager2.currentItem==0){
-                        Log.d("category ki", "$currentCategory")
+
                         val childFragment = viewPager2.getChildAt(0)
-                        val adapter = childFragment.recyclerView_topUS.adapter as NewsAdapter
-                        adapter.performSearch(newText)
+                        Log.d(TAG,"ChildFragment ki? : ${childFragment.toString()}")
+                        val adapter = childFragment?.recyclerView_topUS?.adapter as NewsAdapter?
+                        adapter?.performSearch(newText)
+                        return true
+                    }
+                    else if(viewPager2!=null && viewPager2.currentItem==1){
+                        Log.d(TAG,"${viewPager2.currentItem}")
+                        val childFragment = viewPager2.getChildAt(0)
+                        Log.d(TAG,"ChildFragment ki? : ${childFragment.toString()}")
+                        val adapter = childFragment?.recyclerView_business?.adapter as NewsAdapter?
+                        adapter?.performSearch(newText)
+                        return true
+
+                    }else if(viewPager2!=null && viewPager2.currentItem==2){
+
+                        val childFragment = viewPager2.getChildAt(0)
+                        Log.d(TAG,"ChildFragment ki? : ${childFragment.toString()}")
+                        val adapter = childFragment?.recyclerView_entertainment?.adapter as NewsAdapter?
+                        adapter?.performSearch(newText)
+                        return true
+
+                    }else if(viewPager2!=null && viewPager2.currentItem==3){
+
+                        val childFragment = viewPager2.getChildAt(0)
+                        Log.d(TAG,"ChildFragment ki? : ${childFragment.toString()}")
+                        val adapter = childFragment?.recyclerView_general?.adapter as NewsAdapter?
+                        adapter?.performSearch(newText)
+                        return true
+
+                    }else if(viewPager2!=null && viewPager2.currentItem==4){
+
+                        val childFragment = viewPager2.getChildAt(0)
+                        Log.d(TAG,"ChildFragment ki? : ${childFragment.toString()}")
+                        val adapter = childFragment?.recyclerView_health?.adapter as NewsAdapter?
+                        adapter?.performSearch(newText)
+                        return true
+
+                    }else if(viewPager2!=null && viewPager2.currentItem==5) {
+
+                        val childFragment = viewPager2.getChildAt(0)
+                        Log.d(TAG,"ChildFragment ki? : ${childFragment.toString()}")
+                        val adapter = childFragment?.recyclerView_science?.adapter as NewsAdapter?
+                        adapter?.performSearch(newText)
+                        return true
+
+                    }else if(viewPager2!=null && viewPager2.currentItem==6) {
+
+                        val childFragment = viewPager2.getChildAt(0)
+                        Log.d(TAG,"ChildFragment ki? : ${childFragment.toString()}")
+                        val adapter = childFragment?.recyclerView_sports?.adapter as NewsAdapter?
+                        adapter?.performSearch(newText)
+                        return true
+
+                    }else if(viewPager2!=null && viewPager2.currentItem==7) {
+
+                        val childFragment = viewPager2.getChildAt(0)
+                        Log.d(TAG,"ChildFragment ki? : ${childFragment.toString()}")
+                        val adapter = childFragment?.recyclerView_technology?.adapter as NewsAdapter?
+                        adapter?.performSearch(newText)
+                        return true
 
                     }
 

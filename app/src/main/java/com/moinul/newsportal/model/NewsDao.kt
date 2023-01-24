@@ -9,13 +9,19 @@ interface NewsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addArticle(article: ArticleForRoomDB)
 
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    suspend fun addBookmark(bookmark: Bookmark)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addBookmark(bookmark: Bookmark)
+
+    @Query("DELETE from bookmark_table where id= :id")
+    suspend fun deleteBookmark(id: Int)
 
     @Query("SELECT * FROM article_table")
     fun readAllArticle(): LiveData<List<ArticleForRoomDB>>
     @Query("SELECT * FROM article_table WHERE category= :category")
     fun readArticleByCategory(category: String): LiveData<List<ArticleForRoomDB>>
+
+    @Query("SELECT * FROM bookmark_table")
+    fun readAllBookmark(): LiveData<List<Bookmark>>
 
     @Update
     suspend fun updateBookmark(article: ArticleForRoomDB)
@@ -38,6 +44,8 @@ interface NewsDao {
     @Query("DELETE FROM article_table WHERE category= :category")
     suspend fun deleteArticleByCategory(category: String)
 
+    @Query("UPDATE article_table SET bookmarked=0 WHERE id=:id")
+    suspend fun removeBookmark(id: Int)
 
 
 

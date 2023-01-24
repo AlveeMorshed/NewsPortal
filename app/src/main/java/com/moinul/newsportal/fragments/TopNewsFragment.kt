@@ -18,6 +18,7 @@ import com.moinul.newsportal.MainActivity
 import com.moinul.newsportal.R
 import com.moinul.newsportal.adapters.NewsAdapter
 import com.moinul.newsportal.databinding.FragmentTopNewsBinding
+import com.moinul.newsportal.model.ArticleForRoomDB
 import com.moinul.newsportal.viewModel.NewsViewModel
 import kotlinx.android.synthetic.main.fragment_top_news.*
 
@@ -27,27 +28,7 @@ class TopNewsFragment() : Fragment() {
     private var _binding: FragmentTopNewsBinding? = null
     private val binding get() = _binding!!
 
-    /*override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-        setHasOptionsMenu(true)
-        Log.d("TopNewsFragment","onCreate called")
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.menu_search, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.action_search ->{
-
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }*/
 
     override fun onPause() {
         super.onPause()
@@ -71,12 +52,7 @@ class TopNewsFragment() : Fragment() {
 
             swipeRefreshLayout.isRefreshing= true
             viewModel.fetchTopNews()
-            Handler().postDelayed({
-                // code to execute after the specified delay
-                swipeRefreshLayout.isRefreshing = false
-            }, 3000)
-
-            //swipeRefreshLayout.isRefreshing = false
+            swipeRefreshLayout.isRefreshing = false
         }
         //binding.allNewsViewModel = viewModel
 
@@ -110,23 +86,11 @@ class TopNewsFragment() : Fragment() {
     }
 
     private fun observeData() {
-        val newsAdapter = NewsAdapter(requireContext(), viewModel, this)
-        recyclerView.adapter = newsAdapter
-        /*viewModel.getNewsFromDB("top-US").observe(viewLifecycleOwner){ val it1 = it
-            *//*for(currentArticle in it1){
-                viewModel.isBookmarked(currentArticle.id).observe(viewLifecycleOwner){val it2 = it
-                    currentArticle.bookmarked = it2
-                }
-            }*//*
-            newsAdapter.setDataset(it)
-        }*/
+
+
         viewModel.readAllTopNews.observe(viewLifecycleOwner){ val it1 = it
-            /*for(currentArticle in it1){
-                viewModel.isBookmarked(currentArticle.id).observe(viewLifecycleOwner){val it2 = it
-                    currentArticle.bookmarked = it2
-                }
-            }*/
-            newsAdapter.setDataset(it)
+            //newsAdapter.setDataset(it)
+            recyclerView.adapter = NewsAdapter(requireContext(), viewModel, it as ArrayList<ArticleForRoomDB>)
         }
     }
 
@@ -162,11 +126,6 @@ class TopNewsFragment() : Fragment() {
     }
 
 
-    fun verifyAvailableNetwork(context: Context):Boolean{
-        val connectivityManager= activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo=connectivityManager.activeNetworkInfo
-        return  networkInfo!=null && networkInfo.isConnected
-    }
 
 
 }

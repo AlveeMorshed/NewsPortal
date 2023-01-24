@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         val bottomNavBar = binding.bottomNavbar
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment
         navController = navHostFragment.findNavController()
-        //setupActionBarWithNavController(navController)
+        setupActionBarWithNavController(navController)
 
         bottomNavBar.setOnItemSelectedListener{
             when(it.itemId){
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object{
         fun checkConnectivity(context: Context):Boolean{
-            val connectivityManager= context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val connectivityManager= context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo=connectivityManager.activeNetworkInfo
             return  networkInfo!=null && networkInfo.isConnected
         }

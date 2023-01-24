@@ -1,4 +1,3 @@
-/*
 package com.moinul.newsportal.model
 
 import android.os.Parcelable
@@ -20,4 +19,3 @@ data class Bookmark(
     val urlToImage: String?,
     val category: String?
 ):Parcelable
-*/

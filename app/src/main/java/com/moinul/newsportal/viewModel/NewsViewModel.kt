@@ -33,7 +33,7 @@ class NewsViewModel(application: Application): AndroidViewModel(application) {
 
     init {
         val newsDao = NewsDatabase.getDatabase(application).getDao()
-        //fetchAllNews()
+        fetchAllNews()
         repository = ArticleRepository(newsDao)
         readAllData = repository.readAllArticle
 
@@ -160,49 +160,18 @@ class NewsViewModel(application: Application): AndroidViewModel(application) {
         return repository.isBookmarked(id)
     }
 
-    private fun getAllNews(){
-
+    fun addBookmark(bookmark: Bookmark){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addBookmark(bookmark)
+        }
     }
 
-    /*private fun getTopNews(){
-        viewModelScope.launch{
-            try {
-
-                _topNews.value = NewsApi.retrofitService.getTopNews().articles
-                Log.d("9999999999", "API fetch successful")
-
-                if(topNews.value!!.size > 0){
-                    viewModelScope.launch(Dispatchers.IO) {
-                        insertIntoDB("top", _topNews)
-                    }
-                }
-
-            }catch (e:Exception){
-                Log.d("5555555555","$e     $articles")
-                _topNews.value = listOf()
-            }
+    fun deleteBookmark(id: Int){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteBookmark(id)
         }
-    }*/
+    }
 
-    /*private fun getSportsNews(){
-        viewModelScope.launch{
-            try {
-                _sportsNews.value = NewsApi.retrofitService.getSportsNews().articles
-
-                if(sportsNews.value!!.size > 0){
-                    viewModelScope.launch(Dispatchers.IO) {
-                        insertIntoDB("sports", _sportsNews)
-                    }
-                }
-
-            }catch (e:Exception){
-                Log.d("000000000000000","$e     $articles")
-                _topNews.value = listOf()
-            }
-        }
-    }*/
-
-//    fun getNews():LiveData<List<ArticleForRoomDB>> = repository.getAllNews()
 
     fun getNewsFromDB(category: String): LiveData<List<ArticleForRoomDB>> = repository.getNewsByCategory(category)
 

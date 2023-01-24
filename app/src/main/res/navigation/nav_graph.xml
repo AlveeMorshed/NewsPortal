@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.moinul.newsportal.fragments.HomeFragment"
-        android:label="HomeFragment" >
+        android:label="News Portal Home" >
         <action
             android:id="@+id/action_homeFragment_to_detailedNewsFragment"
             app:destination="@id/detailedNewsFragment" />
@@ -51,12 +51,16 @@
     <fragment
         android:id="@+id/bookmarksFragment"
         android:name="com.moinul.newsportal.fragments.BookmarksFragment"
-        android:label="fragment_bookmarks"
-        tools:layout="@layout/fragment_bookmarks" />
+        android:label="Bookmarks"
+        tools:layout="@layout/fragment_bookmarks" >
+        <action
+            android:id="@+id/action_bookmarksFragment_to_detailedNewsFragment"
+            app:destination="@id/detailedNewsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/detailedNewsFragment"
         android:name="com.moinul.newsportal.fragments.DetailedNewsFragment"
-        android:label="fragment_detailed_news"
+        android:label="Detailed News"
         tools:layout="@layout/fragment_detailed_news" >
         <argument
             android:name="news"
@@ -72,7 +76,7 @@
     <fragment
         android:id="@+id/webViewFragment"
         android:name="com.moinul.newsportal.fragments.WebViewFragment"
-        android:label="fragment_web_view"
+        android:label="Web"
         tools:layout="@layout/fragment_web_view" >
         <argument
             android:name="articleUrl"

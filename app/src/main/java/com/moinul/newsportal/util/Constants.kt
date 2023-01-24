@@ -5,6 +5,7 @@ class Constants {
     companion object{
         const val NEWS = "news"
         const val ARTICLE_URL = "articleUrl"
+        const val BOOKMARK = "bookmark"
 
     }
 }
