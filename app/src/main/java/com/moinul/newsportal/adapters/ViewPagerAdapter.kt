@@ -11,10 +11,8 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): 
     override fun getItemCount(): Int {
         return 8
     }
-
     override fun createFragment(position: Int): Fragment {
         return when(position){
-
             0 -> TopNewsFragment()
             1 -> BusinessFragment()
             2 -> EntertainmentFragment()
@@ -24,7 +22,6 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): 
             6 -> SportsFragment()
             7 -> TechnologyFragment()
             else -> Fragment()
-
         }
     }
 }

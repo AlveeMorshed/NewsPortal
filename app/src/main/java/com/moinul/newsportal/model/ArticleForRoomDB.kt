@@ -1,8 +1,6 @@
 package com.moinul.newsportal.model
 
 import android.os.Parcelable
-import androidx.annotation.NonNull
-import androidx.annotation.Nullable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
@@ -19,6 +17,6 @@ data class ArticleForRoomDB(
     val title: String?,
     val url: String?,
     val urlToImage: String?,
-    val category: String?,
-    val bookmarked: Boolean?
+    val category: String,
+    var bookmarked: Boolean
 ):Parcelable

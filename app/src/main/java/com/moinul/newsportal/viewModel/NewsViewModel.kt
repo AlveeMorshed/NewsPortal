@@ -2,14 +2,15 @@ package com.moinul.newsportal.viewModel
 
 import android.app.Application
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.*
-import com.google.android.material.snackbar.Snackbar
 import com.moinul.newsportal.MainActivity
-import com.moinul.newsportal.R
+import com.moinul.newsportal.database.NewsDatabase
 import com.moinul.newsportal.model.*
 import com.moinul.newsportal.network.NewsApi
 import com.moinul.newsportal.repository.ArticleRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class NewsViewModel(application: Application): AndroidViewModel(application) {
@@ -24,58 +25,240 @@ class NewsViewModel(application: Application): AndroidViewModel(application) {
     private val _sportsNews = MutableLiveData<List<Article>>()
     val sportsNews: LiveData<List<Article>> = _sportsNews
 
+    private val _businessNews = MutableLiveData<List<Article>>()
+    val businessNews: LiveData<List<Article>> = _businessNews
+
+    private val _entertainmentNews = MutableLiveData<List<Article>>()
+    val entertainmentNews: LiveData<List<Article>> = _entertainmentNews
+
+    private val _generalNews = MutableLiveData<List<Article>>()
+    val generalNews: LiveData<List<Article>> = _generalNews
+
+    private val _healthNews = MutableLiveData<List<Article>>()
+    val healthNews: LiveData<List<Article>> = _healthNews
+
+    private val _scienceNews = MutableLiveData<List<Article>>()
+    val scienceNews: LiveData<List<Article>> = _scienceNews
+
+    private val _technologyNews = MutableLiveData<List<Article>>()
+    val technologyNews: LiveData<List<Article>> = _technologyNews
 
 
-    var readAllData: LiveData<List<ArticleForRoomDB>>
 
+    var readAllNewsData: LiveData<List<ArticleForRoomDB>>
+    var readAllBookmarkData: LiveData<List<Bookmark>>
+
+    var readAllTopNews : LiveData<List<ArticleForRoomDB>>
+    var readAllBusinessNews : LiveData<List<ArticleForRoomDB>>
+    var readAllEntertainmentNews : LiveData<List<ArticleForRoomDB>>
+    var readAllGeneralNews: LiveData<List<ArticleForRoomDB>>
+    var readAllHealthNews : LiveData<List<ArticleForRoomDB>>
+    var readAllSportsNews : LiveData<List<ArticleForRoomDB>>
+    var readAllScienceNews : LiveData<List<ArticleForRoomDB>>
+    var readAllTechnologyNews : LiveData<List<ArticleForRoomDB>>
 
     init {
         val newsDao = NewsDatabase.getDatabase(application).getDao()
-        //fetchAllNews()
         repository = ArticleRepository(newsDao)
-        readAllData = repository.readAllArticle
+
+
+        readAllNewsData = repository.readAllArticle
+        readAllBookmarkData = repository.readAllBookmark
+
+        readAllTopNews = repository.readAllTopNews
+        readAllBusinessNews = repository.readAllBusinessNews
+        readAllEntertainmentNews = repository.readAllEntertainmentNews
+        readAllGeneralNews = repository.readAllGeneralNews
+        readAllHealthNews = repository.readAllHealthNews
+        readAllScienceNews = repository.readAllScienceNews
+        readAllSportsNews = repository.readAllSportsNews
+        readAllTechnologyNews = repository.readAllTechnologyNews
+
+
 //        Log.d("NewsViewModel", "${readAllData.value!!.size}")
 
     }
 
-    fun fetchAllNews(){
-        val categories = listOf<String>("sports","business","entertainment","general","health","science","technology")
+    fun getFromDB(): LiveData<List<ArticleForRoomDB>>{
+        return repository.readAllTopNews()
+    }
 
-        viewModelScope.launch {
+    fun fetchAllNews(){
+        val categories = listOf<String>("sports","business","entertainment","general","health","science","technology", "top-US")
+
+        for(category in categories){
+            fetchNewsByCategory(category)
+        }
+
+        /*GlobalScope.launch {
             for(category in categories){
-                _articles.value = NewsApi.retrofitService.getAllNews(category).articles
+                _articles.postValue(NewsApi.retrofitService.getAllNews(category).articles)
                 Log.d("9999999999", "API fetch successful")
                 try{
                     if(_articles.value!!.size > 0){
                         viewModelScope.launch(Dispatchers.IO) {
+                            deleteArticleByCategory(category)
                             insertIntoDB(category, _articles)
                         }
                     }
                 }catch (e: Exception){
                     Log.d("ALLLLLLL","$e     $articles")
-                    _articles.value = listOf()
+                    _articles.postValue(listOf())
                 }
             }
 
-            _articles.value = NewsApi.retrofitService.getAllNews("").articles
+            _articles.postValue(NewsApi.retrofitService.getAllNews("").articles)
             Log.d("777777777", "API TOP US NEWS fetch successful")
             try {
                 if (_articles.value!!.size > 0) {
                     viewModelScope.launch(Dispatchers.IO) {
+                        deleteArticleByCategory("top-US")
                         insertIntoDB("top-US", _articles)
                     }
                 }
             }catch (e: Exception){
                 Log.d("TOP US ALLLLLLL", "$e     $articles")
-                _articles.value = listOf()
+                _articles.postValue(listOf())
             }
+        }*/
+    }
+
+
+    fun fetchNewsByCategory(category: String){
+        if(MainActivity.checkConnectivity(this.getApplication<Application>().applicationContext)){
+            GlobalScope.launch {
+                when(category){
+                    "top-US" -> {
+                        _topNews.postValue(NewsApi.retrofitService.getAllNews("").articles)
+                        try {
+                            if(topNews.value!!.size > 0){
+                                viewModelScope.launch(Dispatchers.IO) {
+                                    deleteArticleByCategory(category)
+                                    insertIntoDB(category, _topNews)
+                                }
+                            }
+                        }catch (e: Exception){
+                            _topNews.postValue(listOf())
+
+                        }
+                    }
+                    "business" -> {
+                        _businessNews.postValue(NewsApi.retrofitService.getAllNews(category).articles)
+                        try {
+                            if(businessNews.value!!.size > 0){
+                                viewModelScope.launch(Dispatchers.IO) {
+                                    deleteArticleByCategory(category)
+                                    insertIntoDB(category, _businessNews)
+                                }
+                            }
+                        }catch (e: Exception){
+                            _businessNews.postValue(listOf())
+                        }
+                    }
+
+                    "entertainment" -> {
+                        _entertainmentNews.postValue(NewsApi.retrofitService.getAllNews(category).articles)
+                        try {
+                            if(entertainmentNews.value!!.size > 0){
+                                viewModelScope.launch(Dispatchers.IO) {
+                                    deleteArticleByCategory(category)
+                                    insertIntoDB(category, _entertainmentNews)
+                                }
+                            }
+                        }catch (e: Exception){
+                            _entertainmentNews.postValue(listOf())
+                        }
+                    }
+
+                    "general" -> {
+                        _generalNews.postValue(NewsApi.retrofitService.getAllNews(category).articles)
+                        try {
+                            if(generalNews.value!!.size > 0){
+                                viewModelScope.launch(Dispatchers.IO) {
+                                    deleteArticleByCategory(category)
+                                    insertIntoDB(category,_generalNews)
+                                }
+                            }
+                        }catch (e: Exception){
+                            _generalNews.postValue(listOf())
+                        }
+                    }
+
+                    "health" -> {
+                        _healthNews.postValue(NewsApi.retrofitService.getAllNews(category).articles)
+                        try {
+                            if(healthNews.value!!.size > 0){
+                                viewModelScope.launch(Dispatchers.IO) {
+                                    deleteArticleByCategory(category)
+                                    insertIntoDB(category, _healthNews)
+                                }
+                            }
+                        }catch (e: Exception){
+                            _healthNews.postValue(listOf())
+                        }
+                    }
+
+                    "science" -> {
+                        _scienceNews.postValue(NewsApi.retrofitService.getAllNews(category).articles)
+                        try {
+                            if (scienceNews.value!!.size > 0){
+                                viewModelScope.launch(Dispatchers.IO) {
+                                    deleteArticleByCategory(category)
+                                    insertIntoDB(category, _scienceNews)
+                                }
+                            }
+                        }catch (e: Exception){
+                            _scienceNews.postValue(listOf())
+                        }
+
+                    }
+                    "sports" -> {
+                        _sportsNews.postValue(NewsApi.retrofitService.getAllNews(category).articles)
+                        try {
+                            if(sportsNews.value!!.size > 0){
+                                viewModelScope.launch(Dispatchers.IO) {
+                                    deleteArticleByCategory(category)
+                                    insertIntoDB(category, _sportsNews)
+                                }
+                            }
+                        }catch (e: Exception){
+                            _sportsNews.postValue(listOf())
+                        }
+                    }
+                    "technology" -> {
+                        _technologyNews.postValue(NewsApi.retrofitService.getAllNews(category).articles)
+                        try {
+                            if(technologyNews.value!!.size > 0){
+                                viewModelScope.launch(Dispatchers.IO) {
+                                    deleteArticleByCategory(category)
+                                    insertIntoDB(category, _technologyNews)
+                                }
+                            }
+                        }catch (e: Exception){
+                            _technologyNews.postValue(listOf())
+                        }
+                    }
+
+                }
+
+            }
+
+        }else{
+            Toast.makeText(MainActivity.appContext, "PLEASE TURN ON INTERNET", Toast.LENGTH_SHORT).show()
         }
+
     }
 
 
     fun addArticle(article: ArticleForRoomDB){
         viewModelScope.launch(Dispatchers.IO) {
             repository.addArticle(article)
+        }
+    }
+
+    fun deleteArticleByCategory(category: String){
+        viewModelScope.launch {
+            repository.deleteArticleByCategory(category)
         }
     }
 
@@ -99,61 +282,30 @@ class NewsViewModel(application: Application): AndroidViewModel(application) {
             addArticle(article)
         }
     }
-    fun addBookmark(id: Int){
+    fun updateBookmark(article: ArticleForRoomDB){
         viewModelScope.launch(Dispatchers.IO){
-            repository.addBookmark(id)
+            repository.updateBookmark(article)
         }
     }
 
-    fun removeBookmark(id: Int){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.removeBookmark(id)
+
+
+    fun isBookmarked(id: Int): LiveData<Boolean>{
+        return repository.isBookmarked(id)
+    }
+
+    fun addBookmark(bookmark: Bookmark){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addBookmark(bookmark)
         }
     }
 
-    private fun getAllNews(){
-
+    fun deleteBookmark(id: Int){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteBookmark(id)
+        }
     }
 
-    /*private fun getTopNews(){
-        viewModelScope.launch{
-            try {
-
-                _topNews.value = NewsApi.retrofitService.getTopNews().articles
-                Log.d("9999999999", "API fetch successful")
-
-                if(topNews.value!!.size > 0){
-                    viewModelScope.launch(Dispatchers.IO) {
-                        insertIntoDB("top", _topNews)
-                    }
-                }
-
-            }catch (e:Exception){
-                Log.d("5555555555","$e     $articles")
-                _topNews.value = listOf()
-            }
-        }
-    }*/
-
-    /*private fun getSportsNews(){
-        viewModelScope.launch{
-            try {
-                _sportsNews.value = NewsApi.retrofitService.getSportsNews().articles
-
-                if(sportsNews.value!!.size > 0){
-                    viewModelScope.launch(Dispatchers.IO) {
-                        insertIntoDB("sports", _sportsNews)
-                    }
-                }
-
-            }catch (e:Exception){
-                Log.d("000000000000000","$e     $articles")
-                _topNews.value = listOf()
-            }
-        }
-    }*/
-
-//    fun getNews():LiveData<List<ArticleForRoomDB>> = repository.getAllNews()
 
     fun getNewsFromDB(category: String): LiveData<List<ArticleForRoomDB>> = repository.getNewsByCategory(category)
 
